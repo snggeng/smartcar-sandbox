@@ -2,15 +2,16 @@
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
-// const mongoose = require('mongoose')
+const mongoose = require('mongoose')
+const morgan = require('morgan')
 const bunyan = require('bunyan')
-// const passport = require('passport')
+const passport = require('passport')
 const path = require('path')
 const app = express()
-// const router = require('./routes/api')
-// const public = require('./routes/public')
-// const config = require('./config')(process.env.NODE_ENV)
-// const auth = require('./middleware/auth.js')
+const router = require('./routes/api')
+const public = require('./routes/public')
+const config = require('./config')(process.env.NODE_ENV)
+const auth = require('./middleware/auth.js')
 const https = require('https')
 const fs = require('fs')
 
@@ -18,15 +19,15 @@ const fs = require('fs')
 const { log } = require('./utils/logger')
 
 /* CONNECT TO MONGODB */
-// mongoose.connect(config.database, config.options)
-// mongoose.Promise = global.Promise
+mongoose.connect(config.database, config.options)
+mongoose.Promise = global.Promise
 
 // Debugging
-// if (process.env.NODE_ENV === 'development') app.use(morgan('dev'))
+if (process.env.NODE_ENV === 'development') app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 // handle stack trace for unhandledRejection
-process.on('unhandledRejection', r => console.log(r));
+process.on('unhandledRejection', r => log.error(r));
 
 // Enable CORS
 app.use((req, res, next) => {
@@ -48,19 +49,19 @@ app.use((req, res, next) => {
 // })
 
 // public routes
-// app.use('/public', public)
+app.use('/public', public)
 
-// Protect 'https://vcm-2849.vm.duke.edu/api/*' route with JWT Auth middleware
-// app.use('/api', auth)
+// Protect '/api/*' route with JWT Auth middleware
+app.use('/api', auth)
 
 // keep all api routes in a seperate file - prefix routes with api/ path
-// app.use('/api', router)
+app.use('/api', router)
 
 // create admin user
 // if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') { seed() }
 
 // Initialize Passport.js
-// app.use(passport.initialize())
+app.use(passport.initialize())
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

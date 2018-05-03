@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const config = require('../config')(process.env.NODE_ENV)
+const { log } = require('./utils/logger')
 
 // Models
 const User = require('../models/user')
@@ -56,7 +57,7 @@ const getPaginated = async (req, res, next) => {
   // search for ingredients based on pagination
   User.paginate(query, { page: page, limit: limit }, (err, result) => {
     if (err) return next(err)
-    // console.log(`docs: ${result.docs}\n total: ${result.total}\n limit: ${result.limit}\n page: ${result.page}`)
+    // log.info(`docs: ${result.docs}\n total: ${result.total}\n limit: ${result.limit}\n page: ${result.page}`)
     res.json({
       users: result.docs,
       page: result.page,
@@ -128,19 +129,17 @@ const signIn = (req, res, next) => {
       return next(error)
     } else {
       // check if password matches
-      // console.log('compare password', req.body.password)
       let isMatch = await user.comparePassword(req.body.password)
 
       if (isMatch) {
         let token = jwt.sign(user.toObject(), config.secret, {expiresIn: '1d'})
         res.json({success: true, token: token})
       } else {
-        console.log('wrong password')
+        log.error('Wrong password')
         let error = new Error('Authentication failed. Wrong password.')
         error.status = 401
         error.type = 'wrong password'
         return next(error)
-        // res.status(401).json({success: false, message: 'Authentication failed. Wrong password.'})
       }
     }
   })
@@ -160,16 +159,14 @@ const signOut = (req, res) => {
 // DUKE NETID
 const sso = async (req, res, next) => {
   // check if user exists and return user or create new user
-  console.log('req body', req.body)
   if (!req.body.username || !req.body.password) {
-    console.log('error')
-    return next(new Error('Username and password are required'))
+    return next(new Error('Username and password are required.'))
   } else {
-    console.log('check if user exists')
+    log.info('Check if user exists')
     // check if user already exists
     let user = await User.findOne({username: req.body.username}).exec()
     if (!user) {
-      console.log('user does not exist')
+      log.error('User does not exist')
       user = await User.create({
         username: req.body.username,
         password: req.body.password,
@@ -178,7 +175,7 @@ const sso = async (req, res, next) => {
         netId: true
       })
     }
-    console.log(`enter sso to be returned: ${user}`)
+    log.info(`Enter sso to be returned: ${user}`)
     // return user credentials
     res.status(200).json(user)
   }
