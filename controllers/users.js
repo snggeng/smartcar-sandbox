@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const config = require('../config')(process.env.NODE_ENV)
-const { log } = require('./utils/logger')
+const { log } = require('../utils/logger')
 
 // Models
 const User = require('../models/user')
@@ -82,8 +82,6 @@ const updateUser = (req, res, next) => {
     if (req.body.username) user.username = req.body.username
     if (req.body.password) user.password = req.body.password
     if (req.body.role) user.role = req.body.role
-    if (req.body.color) user.color = req.body.color
-    if (req.body.display) user.display = req.body.display
     if (req.body.first_name !== undefined) user.first_name = req.body.first_name
     if (req.body.last_name !== undefined) user.last_name = req.body.last_name
     if (req.body.netId) user.netId = req.body.netId

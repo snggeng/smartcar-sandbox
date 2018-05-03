@@ -25,17 +25,8 @@ const UserSchema = new Schema({
     default: false,
     required: true
   },
-  color: {
-    type: String,
-    enum: ['red', 'orange', 'yellow', 'olive', 'green', 'teal',
-      'blue', 'violet', 'purple', 'pink', 'brown', 'black'],
-    required: true
-  },
-  bottles: {
+  cars: {
     type: [String],
-  },
-  display: {
-    type: String
   },
   first_name: {
     type: String
