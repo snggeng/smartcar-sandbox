@@ -4,6 +4,8 @@
   "description": "Sandbox app to test the [Smartcar API](https://smartcar.com/docs?language=cURL#introduction).",
   "main": "app.js",
   "scripts": {
+    "start": "NODE_ENV='development' nodemon app.js",
+    "start-prod": "NODE_ENV='production' sudo nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
