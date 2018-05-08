@@ -1,12 +1,6 @@
-export function setUser (token) {  
-    return {
-      type: USER_SET,
-      token,
-    }
-  }
+export const setUser = (token) => ({
+    type: USER_SET,
+    token,
+})
   
-  export function unsetUser () {  
-    return {
-      type: USER_UNSET,
-    }
-  }
+export const unsetUser = () => ({ type: USER_UNSET })

@@ -4,6 +4,6 @@ const signupRequest = ({ username, password }) => ({
     type: SIGNUP_REQUESTING,
     username,
     password,
-  })
+})
 
 export default signupRequest 

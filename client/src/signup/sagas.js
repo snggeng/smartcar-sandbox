@@ -9,25 +9,23 @@ import {
 // The url derived from our .env file
 const signupUrl = `${process.env.REACT_APP_API_URL}/public/users`
 
-function signupApi (username, password) {  
-  // call to the "fetch".  this is a "native" function for browsers
-  // that's conveniently polyfilled in create-react-app if not available
-  return fetch(signupUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ username, password }),
-  })
-    .then(handleApiErrors) // we'll make this in a second
-    .then(response => response.json())
-    .then(json => json)
-    .catch((error) => { throw error })
-}
+const signupApi = (username, password) => 
+    fetch(signupUrl, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+    })
+        .then(handleApiErrors) // we'll make this in a second
+        .then(response => response.json())
+        .then(json => json)
+        .catch((error) => { throw error })
+
 
 // This will be run when the SIGNUP_REQUESTING
 // Action is found by the watcher
-function* signupFlow (action) {
+const signupFlow = function* (action) {
     try {
         const { username, password } = action
     
@@ -50,7 +48,7 @@ function* signupFlow (action) {
 // Watches for the SIGNUP_REQUESTING action type
 // When it gets it, it will call signupFlow()
 // WITH the action we dispatched
-function* signupWatcher () {  
+const signupWatcher = function* () {  
   // takeLatest() takes the LATEST call of that action and runs it
   // if we we're to use takeEvery, it would take every single
   // one of the actions and kick off a new task to handle it
