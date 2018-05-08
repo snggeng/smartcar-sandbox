@@ -100,6 +100,6 @@ app.use((err, req, res, next) => {
 })
 
 // Start UNIX socket and begin listening for connections on PORT
-app.listen(process.env.PORT || 3000)
+app.listen(process.env.PORT || 3001)
 
 module.exports = app

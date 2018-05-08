@@ -6,6 +6,8 @@
   "scripts": {
     "start": "NODE_ENV='development' nodemon app.js",
     "start-prod": "NODE_ENV='production' sudo nodemon app.js",
+    "client": "cd client && yarn start",
+    "dev": "concurrently --kill-others-on-fail \"yarn start\" \"yarn client\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -13,8 +15,8 @@
     "url": "git+https://github.com/snggeng/smartcar-sandbox.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Geng Sng, <snggeng@gmail.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/snggeng/smartcar-sandbox/issues"
   },
@@ -23,6 +25,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "bunyan": "^1.8.12",
+    "concurrently": "^3.5.1",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.2.1",
