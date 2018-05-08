@@ -119,12 +119,6 @@ const signIn = (req, res, next) => {
       error.type = 'user not found'
       return next(error)
       // res.status(401).send({success: false, message: 'Authentication failed. User not found.'})
-    } else if (user.netId && !req.body.sso) {
-      // NetID users cannot attempt local login
-      let error = new Error('Authentication failed. User not found. You must login using NetID.')
-      error.status = 401
-      error.type = 'netid user attempting local login'
-      return next(error)
     } else {
       // check if password matches
       let isMatch = await user.comparePassword(req.body.password)
@@ -154,30 +148,6 @@ const signOut = (req, res) => {
   })
 }
 
-// DUKE NETID
-const sso = async (req, res, next) => {
-  // check if user exists and return user or create new user
-  if (!req.body.username || !req.body.password) {
-    return next(new Error('Username and password are required.'))
-  } else {
-    log.info('Check if user exists')
-    // check if user already exists
-    let user = await User.findOne({username: req.body.username}).exec()
-    if (!user) {
-      log.error('User does not exist')
-      user = await User.create({
-        username: req.body.username,
-        password: req.body.password,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        netId: true
-      })
-    }
-    log.info(`Enter sso to be returned: ${user}`)
-    // return user credentials
-    res.status(200).json(user)
-  }
-}
 
 // ENABLE USER REFRESH
 // To fetch this endpoint on refresh in frontend to populate req.user
@@ -199,6 +169,5 @@ module.exports = {
   deleteUser,
   signIn,
   signOut,
-  sso,
   refreshUser
 }
