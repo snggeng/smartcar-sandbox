@@ -36,7 +36,8 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept')
   // intercept OPTIONS method
   if ('OPTIONS' == req.method) {
-    res.sendStatus(200)
+    // res.sendStatus(200)
+    next()
   } else {
     next()
   }
@@ -74,9 +75,16 @@ app.use((req, res, next) => {
 if (app.get('env') === 'development') {
   app.use((err, req, res, next) => {
     // Log errors
-    err ?
-      log.error(err) :
-      next()
+    if (err) {
+      log.info(err)
+      res.json({
+        name: err.name,
+        message: err.message,
+        error: err,
+        status: err.status
+      })
+    }
+    next()
   })
 }
 
@@ -89,14 +97,8 @@ app.use((err, req, res, next) => {
       err.description = 'validation error'
     }
     res.status(err.status || 500)
+    res.json(err)
   }
-
-  res.json({
-    name: err.name,
-    message: err.message,
-    error: err,
-    description: err.description
-  })
 })
 
 // Start UNIX socket and begin listening for connections on PORT
