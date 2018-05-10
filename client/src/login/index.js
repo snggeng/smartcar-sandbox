@@ -3,11 +3,18 @@ import PropTypes from 'prop-types'
 import { reduxForm, Field } from 'redux-form'  
 import { connect } from 'react-redux'  
 import { Link } from 'react-router-dom'
+import { Button, Card, Elevation, Classes, Colors, Callout, FormGroup } from "@blueprintjs/core";
 
+// Import components and actions
 import Messages from '../notifications/Messages'  
 import Errors from '../notifications/Errors'
-
 import loginRequest from './actions'
+
+// Import css
+import './index.css'
+import logo from '../smartcar.jpg'
+
+const submitBtn = {marginBottom: '10px', width: '50%'}
 
 // If you were testing, you'd want to export this component
 // so that you can test your custom made component and not
@@ -43,32 +50,33 @@ class Login extends Component {
     } = this.props
 
     return (
-      <div className="login">
-        <form className="widget-form" onSubmit={handleSubmit(this.submit)}>
-          <h1>LOGIN</h1>
-          <label htmlFor="username">Username</label>
-          {/*
-            Our Redux Form Field components that bind email and password
-            to our Redux state's form -> login piece of state.
-          */}
-          <Field
-            name="username"
-            type="text"
-            id="username"
-            className="username"
-            component="input"
-          />
-          <label htmlFor="password">Password</label>
-          <Field
-            name="password"
-            type="password"
-            id="password"
-            className="password"
-            component="input"
-          />
-          <button action="submit">LOGIN</button>
-        </form>
-        <div className="auth-messages">
+      <div className='login-container'>
+        <Card elevation={Elevation.FOUR} className='login-card'>
+          <form onSubmit={handleSubmit(this.submit)}>
+            <img src={logo} className='smartcar-logo' />
+            <FormGroup>
+            <Field
+              className={`${Classes.INPUT} ${Classes.FILL} ${Classes.LARGE}`} 
+              placeholder="Username"
+              name="username"
+              type="text"
+              id="username"
+              component="input"
+              style={{margin: '10px'}}
+            />
+            <Field
+              className={`${Classes.INPUT} ${Classes.FILL} ${Classes.LARGE}`} 
+              placeholder="Password"
+              name="password"
+              type="password"
+              id="password"
+              component="input"
+              style={{margin: '10px'}}
+            />
+            </FormGroup>
+            <Button icon='log-in' text='Login' className={`${Classes.INTENT_SUCCESS}`} style={submitBtn} type='submit' large={true} />
+          </form>
+          <div className="auth-messages">
           {/* As in the signup, we're just using the message and error helpers */}
           {!requesting && !!errors.length && (
             <Errors message="Failure to login due to:" errors={errors} />
@@ -78,9 +86,10 @@ class Login extends Component {
           )}
           {requesting && <div>Logging in...</div>}
           {!requesting && !successful && (
-            <Link to="/signup">Need to Signup? Click Here »</Link>
+            <Link to="/signup"><Callout intent='success' icon='info-sign' style={{marginTop: '20px'}}>Need to Signup? Click Here</Callout></Link>
           )}
         </div>
+        </Card>
       </div>
     )
   }

@@ -1,11 +1,11 @@
-.home-container {
+.login-container {
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.home-card {
+.login-card {
     text-align: center;
     max-width: 50%;
     min-width: 150px;
@@ -13,17 +13,8 @@
     padding: 40px !important;
 }
 
-.home-subtitle {
-    padding: 10px 0;
-    font-size: 1.5em;
-}
-
-.home-content {
-    padding: 10px 0;
-    font-size: 1.2em;
-}
-
 .smartcar-logo {
     height: 100px;
     width: 100px;
+    margin-bottom: 20px;
 }
