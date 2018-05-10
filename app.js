@@ -36,8 +36,8 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept')
   // intercept OPTIONS method
   if ('OPTIONS' == req.method) {
-    // res.sendStatus(200)
-    next()
+    res.sendStatus(200)
+    // next()
   } else {
     next()
   }
