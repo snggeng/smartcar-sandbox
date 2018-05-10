@@ -26,7 +26,7 @@ const loginReducer = (state = initialState, action) => {
         case LOGIN_SUCCESS:
         return {
             errors: [],
-            messages: [{ body: 'You are now logged in!' + state.user.username, time: new Date() }],
+            messages: [{ body: 'You are now logged in!', time: new Date() }],
             requesting: false,
             successful: true,
         }

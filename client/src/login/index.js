@@ -33,10 +33,8 @@ class Login extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.login.successful, nextProps.login.messages)
+    // show successful login
     if (nextProps.login.successful) {
-      console.log('success')
-      showToast('success', {body: 'success'}) 
       nextProps.login.messages.map(e => { 
         showToast('success', e) 
       })
