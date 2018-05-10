@@ -1,27 +1,32 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { Intent, Position, Toaster } from "@blueprintjs/core";
 
-// Iterate over each message object and print them
-// in an unordered list
-const Messages = (props) => {  
-  const { messages } = props
-  return (
-    <div>
-      <ul>
-        {messages.map(message => (
-          <li key={message.time}>{message.body}</li>
-        ))}
-      </ul>
-    </div>
+const MyToaster = Toaster.create({})
+
+export const showToast = (type, message) => {
+  let intent
+  let iconName
+  message = message.body
+  if(type === "info") {
+    iconName = "info-sign"
+  }
+  if(type === "error") {
+    intent = Intent.DANGER
+    iconName = "warning-sign"
+  } else if(type === "warning") {
+    // parse(type, message, err)
+    intent = Intent.WARNING
+    iconName = "warning-sign"
+  } else if(type === "success") {
+    intent = Intent.SUCCESS
+    iconName = "tick-circle"
+  }
+  MyToaster.show(
+    {
+      intent,
+      position: Position.TOP,
+      iconName,
+      message
+    }
   )
 }
-
-Messages.propTypes = {  
-  messages: PropTypes.arrayOf(
-      PropTypes.shape({
-        body: PropTypes.string,
-        time: PropTypes.date,
-      })),
-}
-
-export default Messages  

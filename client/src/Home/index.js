@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ButtonGroup, Card, Elevation, Classes, Colors } from "@blueprintjs/core";
+import { Button, ButtonGroup, Card, Elevation, Classes, Colors } from "@blueprintjs/core"
 import { Link } from 'react-router-dom'
 
 // Import css

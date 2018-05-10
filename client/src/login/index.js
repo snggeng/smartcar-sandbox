@@ -1,12 +1,12 @@
 import React, { Component } from 'react'  
 import PropTypes from 'prop-types'
-import { reduxForm, Field } from 'redux-form'  
+import { reduxForm, Field, clearSubmitErrors } from 'redux-form'  
 import { connect } from 'react-redux'  
 import { Link } from 'react-router-dom'
-import { Button, Card, Elevation, Classes, Colors, Callout, FormGroup } from "@blueprintjs/core";
+import { Button, Card, Elevation, Classes, Colors, Callout, FormGroup } from "@blueprintjs/core"
 
 // Import components and actions
-import Messages from '../notifications/Messages'  
+import { showToast } from '../notifications/Messages'  
 import Errors from '../notifications/Errors'
 import loginRequest from './actions'
 
@@ -30,6 +30,27 @@ class Login extends Component {
       messages: PropTypes.array,
       errors: PropTypes.array,
     }),
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps.login.successful, nextProps.login.messages)
+    if (nextProps.login.successful) {
+      console.log('success')
+      showToast('success', {body: 'success'}) 
+      nextProps.login.messages.map(e => { 
+        showToast('success', e) 
+      })
+    }
+    // reset form errors
+    if (!this.props.login.requesting && this.props.login.errors == nextProps.login.errors && !!this.props.login.errors.length) {
+      this.props.login.errors = []
+    }
+    // show errors
+    if (!!nextProps.login.errors.length) {
+      nextProps.login.errors.map(e => { 
+        showToast('error', e) 
+      })
+    }
   }
 
   // Remember, Redux Form passes the form values to our handler
@@ -77,14 +98,6 @@ class Login extends Component {
             <Button icon='log-in' text='Login' className={`${Classes.INTENT_SUCCESS}`} style={submitBtn} type='submit' large={true} />
           </form>
           <div className="auth-messages">
-          {/* As in the signup, we're just using the message and error helpers */}
-          {!requesting && !!errors.length && (
-            <Errors message="Failure to login due to:" errors={errors} />
-          )}
-          {!requesting && !!messages.length && (
-            <Messages messages={messages} />
-          )}
-          {requesting && <div>Logging in...</div>}
           {!requesting && !successful && (
             <Link to="/signup"><Callout intent='success' icon='info-sign' style={{marginTop: '20px'}}>Need to Signup? Click Here</Callout></Link>
           )}
@@ -107,6 +120,9 @@ const connected = connect(mapStateToProps, { loginRequest })(Login)
 // in our Redux's state, this form will be available in 'form.login'
 const formed = reduxForm({  
   form: 'login',
+  onChange: (values, dispatch, props) => {
+    if (props.error) dispatch(clearSubmitErrors('login'));
+  }
 })(connected)
 
 // Export our well formed login component

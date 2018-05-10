@@ -1,14 +1,20 @@
 import React, { Component } from 'react'  
 import PropTypes from 'prop-types'
-import { reduxForm, Field } from 'redux-form'  
+import { reduxForm, Field, clearSubmitErrors, reset } from 'redux-form'  
 import { connect } from 'react-redux'  
 import { Link } from 'react-router-dom'
+import { Button, Card, Elevation, Classes, Colors, Callout, FormGroup } from "@blueprintjs/core"
 
-// Import the helpers.. that we'll make here in the next step
-import Messages from '../notifications/Messages'  
+// Import components and actions
+import { showToast } from '../notifications/Messages'  
 import Errors from '../notifications/Errors'
-
 import signupRequest from './actions'
+
+// Import css
+import './index.css'
+import logo from '../smartcar.jpg'
+
+const submitBtn = {marginBottom: '10px', width: '50%'}
 
 class Signup extends Component {  
   // Pass the correct proptypes in for validation
@@ -26,10 +32,19 @@ class Signup extends Component {
   // Redux Form will call this function with the values of our
   // Form fields "email" and "password" when the form is submitted
   // this will in turn call the action
-  submit = (values) => {
-    // we could just do signupRequest here with the static proptypes
-    // but ESLint doesn't like that very much...
-    this.props.signupRequest(values)
+  submit = values => this.props.signupRequest(values)
+
+  componentWillReceiveProps(nextProps) {
+    // reset form errors
+    if (!this.props.signup.requesting && this.props.signup.errors == nextProps.signup.errors && !!this.props.signup.errors.length) {
+      this.props.signup.errors = []
+    }
+    // show errors
+    if (!!nextProps.signup.errors.length) {
+      nextProps.signup.errors.map(e => { 
+        showToast('error', e) 
+      })
+    }
   }
 
   render () {
@@ -46,54 +61,43 @@ class Signup extends Component {
     } = this.props
 
     return (
-      <div className="signup">
-        {/* Use the Submit handler with our own submit handler*/}
-        <form className="widget-form" onSubmit={handleSubmit(this.submit)}>
-          <h1>Signup</h1>
-          <label htmlFor="username">Username</label>
-          <Field
-            name="username"
-            type="text"
-            id="username"
-            className="email"
-            label="Username"
-            component="input"
-          />
-          <label htmlFor="password">Password</label>
-          <Field
-            name="password"
-            type="password"
-            id="password"
-            className="password"
-            label="Password"
-            component="input"
-          />
-          <button action="submit">SIGNUP</button>
-        </form>
-        <div className="auth-messages">
-          {
-            /* 
-            These are all nothing more than helpers that will show up
-            based on the UI states, not worth covering in depth.  Simply put
-            if there are messages or errors, we show them
-            */
-          }
-          {!requesting && !!errors.length && (
-            <Errors message="Failure to signup due to:" errors={errors} />
-          )}
-          {!requesting && !!messages.length && (
-            <Messages messages={messages} />
-          )}
+      <div className='signup-container'>
+        <Card elevation={Elevation.FOUR} className='signup-card'>
+          <form onSubmit={handleSubmit(this.submit)}>
+            <img src={logo} className='smartcar-logo' />
+            <FormGroup>
+            <Field
+              className={`${Classes.INPUT} ${Classes.FILL} ${Classes.LARGE}`} 
+              placeholder="Username"
+              name="username"
+              type="text"
+              id="username"
+              component="input"
+              style={{margin: '10px'}}
+            />
+            <Field
+              className={`${Classes.INPUT} ${Classes.FILL} ${Classes.LARGE}`} 
+              placeholder="Password"
+              name="password"
+              type="password"
+              id="password"
+              component="input"
+              style={{margin: '10px'}}
+            />
+            </FormGroup>
+            <Button icon='new-person' text='Sign Up' className={`${Classes.INTENT_SUCCESS}`} style={submitBtn} type='submit' large={true} />
+          </form>
+          <div className="auth-messages">
           {!requesting && successful && (
-            <div>
-              Signup Successful! <Link to="/login">Click here to Login »</Link>
-            </div>
+            <Callout intent='success' icon='info-sign'>
+              Signup Successful! <Link to="/login">Click here to Login</Link>
+            </Callout>
           )}
-          {/* Redux Router's <Link> component for quick navigation of routes */}
           {!requesting && !successful && (
-            <Link to="/login">Already a Widgeter? Login Here »</Link>
+            <Link to="/login"><Callout intent='success' icon='info-sign' style={{marginTop: '20px'}}>Already have an account? Login here.</Callout></Link>
           )}
         </div>
+        </Card>
       </div>
     )
   }
@@ -113,6 +117,9 @@ const connected = connect(mapStateToProps, { signupRequest })(Signup)
 // the form we use in this component as "signup".
 const formed = reduxForm({  
   form: 'signup',
+  // onChange: (values, dispatch, props) => {
+  //   if (props.errors) dispatch(clearSubmitErrors('signup'));
+  // },
 })(connected)
 
 // Export our well formed component!

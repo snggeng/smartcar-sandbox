@@ -14,9 +14,7 @@ import NoMatch from './NoMatch'
 // Import css
 import './App.css'
 
-const PrivateRoute = ({ component: Component, loggedIn, ...rest }) => {
-  console.log('private route', loggedIn)
-  return (
+const PrivateRoute = ({ component: Component, loggedIn, ...rest }) => (
     <Route
       {...rest}
       render={props =>
@@ -32,8 +30,7 @@ const PrivateRoute = ({ component: Component, loggedIn, ...rest }) => {
         )
       }
     />
-  );
-}
+  )
 
 class App extends Component {
   constructor(props) {

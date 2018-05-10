@@ -71,7 +71,6 @@ const loginFlow = function* (username, password) {
         yield put(push('/widgets'))
     } catch (error) {
         // error? send it to redux
-        // console.log(error)
         yield put({ type: LOGIN_ERROR, error })
     } finally {
         // No matter what, if our `forked` `task` was cancelled

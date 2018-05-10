@@ -17,8 +17,8 @@ const signupApi = (username, password) =>
         },
         body: JSON.stringify({ username, password }),
     })
-        .then(handleApiErrors)
         .then(response => response.json())
+        .then(handleApiErrors)
         .then(json => json)
         .catch((error) => { throw error })
 
