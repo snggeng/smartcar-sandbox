@@ -17,7 +17,7 @@ const NoMatch = () => (
             <hr className='divider' />
             <div className='_1'>THE PAGE</div>
             <div className='_2'>WAS NOT FOUND</div>
-            <Link to='/' className='btn'>BACK TO HOME</Link>
+            <Link to='/' className='nomatch-btn'>BACK TO HOME</Link>
         </div>
     </div>
 )
