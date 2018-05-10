@@ -4,20 +4,17 @@ import { applyMiddleware, createStore, compose } from 'redux'
 import { Provider } from 'react-redux'  
 import createSagaMiddleware from 'redux-saga'
 import createHistory from 'history/createBrowserHistory'
-import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux'
+import { routerMiddleware } from 'react-router-redux'
 import { Redirect, Router, Route, Switch } from 'react-router-dom'
 
-import {  
-    checkIndexAuthorization,
-    checkWidgetAuthorization,
-    checkAuthorization
-  } from './lib/check-auth'
+import { checkAuthorization } from './lib/check-auth'
 
 // Import all of our components
 import App from './App'  
 import Login from './login'  
 import Signup from './signup'  
 import Widgets from './widgets'  
+import NoMatch from './NoMatch'
 import './index.css'
 
 // Import the index reducer and sagas
@@ -47,12 +44,29 @@ sagaMiddleware.run(IndexSagas, store.dispatch)
 
 const loggedIn = checkAuthorization(store.dispatch)
 
+const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route
+      {...rest}
+      render={props =>
+        loggedIn ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
+
 // Setup the top level router component for our React Router
 ReactDOM.render(  
   <Provider store={store}>
     <Router history={history}>
         <Switch>
-        {/* <IndexRouter  /> */}
         <Route exact path="/" render={() => (
             loggedIn ? (
                 <Redirect to="/widgets"/>
@@ -61,13 +75,8 @@ ReactDOM.render(
             ) )}/>
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
-        <Route path="/widgets" render={() => (
-            !loggedIn ? (
-                <Redirect to="/login"/>
-            ) : (
-                <Widgets/>
-            )
-        )} />
+        <PrivateRoute path="/widgets" component={Widgets} />
+        <Route component={NoMatch}/>
         </Switch>
     </Router>
   </Provider>,

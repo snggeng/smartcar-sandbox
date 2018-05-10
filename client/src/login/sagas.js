@@ -54,16 +54,14 @@ const logout = function* () {
 const loginFlow = function* (username, password) {
     let token
     try {
-        // try to call to our loginApi() function.  Redux Saga
-        // will pause here until we either are successful or
-        // receive an error
+        // synchronous
         let response = yield call(loginApi, username, password)
         token = response.token
-        console.log('response', response)
-        // inform Redux to set our user token, this is non blocking so...
+
+        // async, non blocking
         yield put(setUser(response.token))
 
-        // .. also inform redux that our login was successful
+        // async, non blocking
         yield put({ type: LOGIN_SUCCESS })
 
         // set a stringified version of our token to localstorage on our domain
@@ -73,7 +71,7 @@ const loginFlow = function* (username, password) {
         yield put(push('/widgets'))
     } catch (error) {
         // error? send it to redux
-        console.log(error)
+        // console.log(error)
         yield put({ type: LOGIN_ERROR, error })
     } finally {
         // No matter what, if our `forked` `task` was cancelled

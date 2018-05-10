@@ -6,9 +6,9 @@ import {
   SIGNUP_ERROR,
 } from './constants'
 
-// The url derived from our .env file
 const signupUrl = `${process.env.REACT_APP_API_URL}/public/users`
 
+// asynchronous
 const signupApi = (username, password) => 
     fetch(signupUrl, {
         method: 'POST',
@@ -17,26 +17,21 @@ const signupApi = (username, password) =>
         },
         body: JSON.stringify({ username, password }),
     })
-        .then(handleApiErrors) // we'll make this in a second
+        .then(handleApiErrors)
         .then(response => response.json())
         .then(json => json)
         .catch((error) => { throw error })
 
 
-// This will be run when the SIGNUP_REQUESTING
-// Action is found by the watcher
+// SIGNUP_REQUESTING action detected by watcher
 const signupFlow = function* (action) {
     try {
         const { username, password } = action
     
-        // pulls "calls" to our signupApi with our username and password
-        // from our dispatched signup action, and will PAUSE
-        // here until the API async function, is complete!
+        // synchronous
         const response = yield call(signupApi, username, password)
     
-        // when the above api call has completed it will "put",
-        // or dispatch, an action of type SIGNUP_SUCCESS with
-        // the successful response.
+        // will throw error if signupApi failed. if not, dispatch action
         yield put({ type: SIGNUP_SUCCESS, response })
       } catch (error) {
         // if the api call fails, it will "put" the SIGNUP_ERROR
