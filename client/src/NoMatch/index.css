@@ -1,12 +1,13 @@
 /* cloud css animations from https://codepen.io/sqfreakz/pen/GJRJOY */
-@import url(https://fonts.googleapis.com/css?family=opensans:500);
 
 body {
     background: #33cc99;
-    color:#fff;
-    font-family: 'Open Sans', sans-serif;
     max-height:700px;
     overflow: hidden;
+}
+
+.container {
+    color:#fff;
 }
 
 .c {
@@ -16,6 +17,7 @@ body {
     width:80%;
     margin:100px auto;
 }
+
 ._404 {
     font-size: 220px;
     position: relative;
@@ -29,6 +31,7 @@ body {
     text-align:center;
     display:block;
     position:relative;
+    padding: 5px;
     letter-spacing: 12px;
     font-size: 4em;
     line-height: 80%;
@@ -79,19 +82,19 @@ body {
     width:60%;
 }
 
-hr {
+.divider {
     padding: 0;
     border: none;
     border-top: 5px solid #fff;
     color: #fff;
     text-align: center;
-    margin: 0px auto;
+    margin: 0px auto !important;
     width: 420px;
     height:10px;
     z-index: -10;
 }
 
-hr:after {
+.divider:after {
     content: "\2022";
     display: inline-block;
     position: relative;

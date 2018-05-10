@@ -5,16 +5,14 @@ import { Provider } from 'react-redux'
 import createSagaMiddleware from 'redux-saga'
 import createHistory from 'history/createBrowserHistory'
 import { routerMiddleware } from 'react-router-redux'
-import { Redirect, Router, Route, Switch } from 'react-router-dom'
 
+// Import components
+import App from './App'
+
+// Helpers
 import { checkAuthorization } from './lib/check-auth'
 
-// Import all of our components
-import App from './App'  
-import Login from './login'  
-import Signup from './signup'  
-import Widgets from './widgets'  
-import NoMatch from './NoMatch'
+// Import css
 import './index.css'
 
 // Import the index reducer and sagas
@@ -42,43 +40,12 @@ const store = createStore(
 // Begin our Index Saga
 sagaMiddleware.run(IndexSagas, store.dispatch)
 
-const loggedIn = checkAuthorization(store.dispatch)
-
-const PrivateRoute = ({ component: Component, ...rest }) => (
-    <Route
-      {...rest}
-      render={props =>
-        loggedIn ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: { from: props.location }
-            }}
-          />
-        )
-      }
-    />
-  );
+const loggedIn = () => checkAuthorization(store.dispatch)
 
 // Setup the top level router component for our React Router
 ReactDOM.render(  
   <Provider store={store}>
-    <Router history={history}>
-        <Switch>
-        <Route exact path="/" render={() => (
-            loggedIn ? (
-                <Redirect to="/widgets"/>
-            ) : (
-                <App/>
-            ) )}/>
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
-        <PrivateRoute path="/widgets" component={Widgets} />
-        <Route component={NoMatch}/>
-        </Switch>
-    </Router>
+    <App history={history} loggedIn={loggedIn} />
   </Provider>,
   document.getElementById('root'),
 )

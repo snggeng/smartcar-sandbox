@@ -3,21 +3,21 @@ import  { Link } from 'react-router-dom'
 import './index.css'
 
 const NoMatch = () => (
-    <div>
-        <div id="clouds">
-            <div class="cloud x1"></div>
-            <div class="cloud x1_5"></div>
-            <div class="cloud x2"></div>
-            <div class="cloud x3"></div>
-            <div class="cloud x4"></div>
-            <div class="cloud x5"></div>
+    <div className='container'>
+        <div id='clouds'>
+            <div className='cloud x1'></div>
+            <div className='cloud x1_5'></div>
+            <div className='cloud x2'></div>
+            <div className='cloud x3'></div>
+            <div className='cloud x4'></div>
+            <div className='cloud x5'></div>
         </div>
-        <div class='c'>
-            <div class='_404'>404</div>
-            <hr/>
-            <div class='_1'>THE PAGE</div>
-            <div class='_2'>WAS NOT FOUND</div>
-            <Link to='/'><a class='btn' href='#'>BACK TO HOME</a></Link>
+        <div className='c'>
+            <div className='_404'>404</div>
+            <hr className='divider' />
+            <div className='_1'>THE PAGE</div>
+            <div className='_2'>WAS NOT FOUND</div>
+            <Link to='/' className='btn'>BACK TO HOME</Link>
         </div>
     </div>
 )

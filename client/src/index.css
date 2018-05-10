@@ -1,5 +1,12 @@
+/* BlueprintJS css */
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+
 body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  background: #33cc99;
+  /* max-height:700px;
+  overflow: hidden; */
 }

@@ -1,5 +1,4 @@
 import { setUser } from '../user/actions'
-import { push } from 'react-router-redux'
 
 export function checkAuthorization (dispatch) {  
     // attempt to grab the token from localstorage
@@ -25,7 +24,7 @@ export function checkAuthorization (dispatch) {
       dispatch(setUser(token))
       return true
     }
-    console.log('no user token')
+    // console.log('no user token')
   
     return false
   }
