@@ -10,7 +10,7 @@ import { routerMiddleware } from 'react-router-redux'
 import App from './App'
 
 // Helpers
-import { checkAuthorization } from './lib/check-auth'
+import { checkAuthorization } from './lib/auth'
 
 // Import css
 import './index.css'

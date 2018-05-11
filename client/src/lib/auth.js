@@ -1,3 +1,4 @@
+import jwt_decode from 'jwt-decode'
 import { setUser } from '../User/actions'
 
 export function checkAuthorization (dispatch) {  
@@ -27,4 +28,10 @@ export function checkAuthorization (dispatch) {
     // console.log('no user token')
   
     return false
+  }
+
+  export const getUser = () => {
+    let token = window.localStorage.getItem('token')
+    let user = jwt_decode(token)
+    return user
   }
