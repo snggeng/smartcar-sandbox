@@ -6,7 +6,7 @@ import { push, replace } from 'react-router-redux'
 // Helper for api errors
 import { handleApiErrors } from '../lib/api-errors'
 
-// Our login constants
+// Our constants
 import {  
   LOGOUT_REQUESTING,
   LOGOUT_SUCCESS,
@@ -15,10 +15,12 @@ import {
   SMARTCAR_AUTH_ERROR,
 } from './constants'
 
-// So that we can modify our User piece of state
+// Import actions
 import {  
   unsetUser,
+  updateUser
 } from '../User/actions'
+import { smartcarResponse } from './actions'
 
 const logout = function* () {
     // dispatches the USER_UNSET action
@@ -92,7 +94,9 @@ const dashboardWatcher = function* (search) {
             access = JSON.stringify(callback.access)
             // set a stringified version of our token to localstorage on our domain
             localStorage.setItem('access_token', access)
-            console.log(`callback ${JSON.stringify(callback)}, access ${access}`)
+            yield put(updateUser(access))
+            yield put(smartcarResponse(JSON.stringify(callback)))
+            // console.log(`callback ${JSON.stringify(callback)}, access ${access}`)
         }
 
     }

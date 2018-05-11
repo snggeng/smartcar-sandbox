@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Navbar, NavbarGroup, NavbarDivider, NavbarHeading, Button, Alignment, Card, Elevation } from '@blueprintjs/core'
+import { Navbar, NavbarGroup, NavbarDivider, NavbarHeading, Button, Alignment, Card, Elevation, Icon } from '@blueprintjs/core'
 import { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess } from './actions'
 import { connect } from 'react-redux'
 import { getUser } from '../lib/auth'
@@ -12,7 +12,8 @@ class Dashboard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: {}
+      user: {},
+      dashboard: {}
     }
   }
   
@@ -34,9 +35,11 @@ class Dashboard extends Component {
               <img src={logo} alt='smartcar-logo' className='dashboard-smartcar-logo'/>
               <NavbarHeading> Smartcar Sandbox</NavbarHeading>
               <NavbarDivider />
-              <Button className="pt-minimal" icon="home" text="Home" />
-              <Button className="pt-minimal" icon="document" text="API" />
-              <Button className="pt-minimal" icon="user" text={user.first_name} />
+              {/* <Button className="pt-minimal" icon="home" text="Home" /> */}
+              <a target="_blank" href="https://smartcar.com/docs">
+                <Button className="pt-minimal" icon="document" text="API" />
+              </a>
+              <Button className="pt-minimal" icon="cog" text='settings' />
           </NavbarGroup>
           <NavbarGroup align={Alignment.RIGHT}>
               <Button className="pt-minimal" icon="log-out" text="Logout" onClick={this.props.logoutRequest} />
@@ -44,6 +47,9 @@ class Dashboard extends Component {
         </Navbar>
         <div className='dashboard-container'>
           <Card elevation={Elevation.FOUR} className='dashboard-card'>
+          <h5><Icon icon='user' size={30}/> {user.first_name} {user.last_name}</h5>
+          <p>{this.props.user.smartcar ? 'Connected to Smartcar API with valid access token.' : 'Yet to connect to Smartcar API. No access token.'}</p>
+          <p>{this.props.dashboard ? JSON.stringify(this.props.dashboard.messages[0].body) : null }</p>
             <Button text="Connect to your car" onClick={this.props.smartcarAuthRequest} />
           </Card>
         </div>
@@ -54,7 +60,7 @@ class Dashboard extends Component {
 
 // Grab only the piece of state we need
 const mapStateToProps = state => ({  
-  login: state.login,
+  user: state.user,
   dashboard: state.dashbaord
 })
 

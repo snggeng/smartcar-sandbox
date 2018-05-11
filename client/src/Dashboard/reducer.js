@@ -5,6 +5,7 @@ import {
     SMARTCAR_AUTH_REQUESTING,
     SMARTCAR_AUTH_SUCCESS,
     SMARTCAR_AUTH_ERROR,
+    SMARTCAR_RESPONSE_SUCCESS,
 } from './constants'
 
 import { LOGIN_SUCCESS } from '../Login/constants'
@@ -76,6 +77,14 @@ export const dashboardReducer = (state = initialState, action) => {
             messages: [],
             requesting: false,
             successful: false,
+        }
+
+        case SMARTCAR_RESPONSE_SUCCESS:
+        return {
+            errors: [],
+            messages: [{ body: action.response, time: new Date() }],
+            requesting: false,
+            successful: true,
         }
 
         default:
