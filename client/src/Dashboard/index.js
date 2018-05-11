@@ -49,7 +49,7 @@ class Dashboard extends Component {
           <Card elevation={Elevation.FOUR} className='dashboard-card'>
           <h5><Icon icon='user' size={30}/> {user.first_name} {user.last_name}</h5>
           <p>{this.props.user.smartcar ? 'Connected to Smartcar API with valid access token.' : 'Yet to connect to Smartcar API. No access token.'}</p>
-          <p>{this.props.dashboard ? JSON.stringify(this.props.dashboard.messages[0].body) : null }</p>
+          {this.props.dashboard.messages ? (<p>{this.props.dashboard.messages[0].body.make}</p>) : null}
             <Button text="Connect to your car" onClick={this.props.smartcarAuthRequest} />
           </Card>
         </div>
@@ -61,7 +61,7 @@ class Dashboard extends Component {
 // Grab only the piece of state we need
 const mapStateToProps = state => ({  
   user: state.user,
-  dashboard: state.dashbaord
+  dashboard: state.dashboard
 })
 
 export default connect(mapStateToProps, { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess })(Dashboard)
