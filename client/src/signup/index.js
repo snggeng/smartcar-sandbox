@@ -1,9 +1,9 @@
 import React, { Component } from 'react'  
 import PropTypes from 'prop-types'
-import { reduxForm, Field, clearSubmitErrors, reset } from 'redux-form'  
+import { reduxForm, Field } from 'redux-form'  
 import { connect } from 'react-redux'  
 import { Link } from 'react-router-dom'
-import { Icon, Button, Card, Elevation, Classes, Colors, Callout, FormGroup } from "@blueprintjs/core"
+import { Icon, Button, Card, Elevation, Classes, Callout, FormGroup } from "@blueprintjs/core"
 
 // Import components and actions
 import { showToast } from '../Notifications'  
@@ -23,12 +23,12 @@ const maxLength15 = maxLength(15)
 const minLength = min => value =>
   value && value.length < min ? `Must be ${min} characters or more` : undefined
 const minLength2 = minLength(2)
-const email = value =>
-  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
-    ? 'Invalid email address'
-    : undefined
+// const email = value =>
+//   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
+//     ? 'Invalid email address'
+//     : undefined
 
-    // Custom Form Input Field    
+// Custom Form Input Field    
 const renderField = ({
   input,
   label,
@@ -69,14 +69,12 @@ class Signup extends Component {
 
   componentWillReceiveProps(nextProps) {
     // reset form errors
-    if (!this.props.signup.requesting && this.props.signup.errors == nextProps.signup.errors && !!this.props.signup.errors.length) {
+    if (!this.props.signup.requesting && this.props.signup.errors === nextProps.signup.errors && !!this.props.signup.errors.length) {
       this.props.signup.errors = []
     }
     // show errors
     if (!!nextProps.signup.errors.length) {
-      nextProps.signup.errors.map(e => { 
-        showToast('error', e) 
-      })
+      nextProps.signup.errors.map(e => showToast('error', e))
     }
   }
 
@@ -88,8 +86,6 @@ class Signup extends Component {
       signup: {
         requesting,
         successful,
-        messages,
-        errors,
       },
     } = this.props
 
