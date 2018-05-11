@@ -34,7 +34,7 @@ class Login extends Component {
   componentWillReceiveProps(nextProps) {
     // show successful login
     if (nextProps.login.successful) {
-      nextProps.login.messages.map(e => showToast('success', e))
+      nextProps.login.messages.map(m => showToast('success', m))
     }
     // reset form errors
     if (!this.props.login.requesting && this.props.login.errors === nextProps.login.errors && !!this.props.login.errors.length) {

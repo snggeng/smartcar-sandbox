@@ -25,10 +25,10 @@ import {
 const logout = function* () {
     // dispatches the USER_UNSET action
     yield put(unsetUser())
-
     // remove our token
     localStorage.removeItem('token')
-
+    // update store
+    yield put({ type: LOGOUT_SUCCESS })
     // redirect to the home screen
     yield put(push('/'))
 }

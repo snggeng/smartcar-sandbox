@@ -3,6 +3,8 @@ import {
     LOGOUT_SUCCESS,
     LOGOUT_ERROR,
 } from './constants'
+
+import { LOGIN_SUCCESS } from '../Login/constants'
   
 const logoutInitialState = {  
     requesting: false,
@@ -39,6 +41,9 @@ export const logoutReducer = (state = logoutInitialState, action) => {
             requesting: false,
             successful: false,
         }
+
+        case LOGIN_SUCCESS: 
+        return logoutInitialState
 
         default:
         return state
