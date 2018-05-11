@@ -68,7 +68,7 @@ const loginFlow = function* (username, password) {
         localStorage.setItem('token', JSON.stringify(token))
 
         // redirect them to WIDGETS!
-        yield put(push('/widgets'))
+        yield put(push('/dashboard'))
     } catch (error) {
         // error? send it to redux
         yield put({ type: LOGIN_ERROR, error })

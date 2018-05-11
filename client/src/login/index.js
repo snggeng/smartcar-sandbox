@@ -7,7 +7,7 @@ import { Button, Card, Elevation, Classes, Callout, FormGroup } from "@blueprint
 
 // Import components and actions
 import { showToast } from '../Notifications'  
-import loginRequest from './actions'
+import { loginRequest } from './actions'
 
 // Import css
 import './index.css'
@@ -28,7 +28,7 @@ class Login extends Component {
       successful: PropTypes.bool,
       messages: PropTypes.array,
       errors: PropTypes.array,
-    }),
+    })
   }
 
   componentWillReceiveProps(nextProps) {
