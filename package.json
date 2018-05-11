@@ -39,6 +39,7 @@
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-transition-group": "^2.3.1",
+    "smartcar": "^3.0.1",
     "through": "^2.3.8"
   }
 }

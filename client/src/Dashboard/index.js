@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Navbar, NavbarGroup, NavbarDivider, NavbarHeading, Button, Alignment } from '@blueprintjs/core'
-import { logoutRequest } from './actions'
+import { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess } from './actions'
 import { connect } from 'react-redux'
 import { getUser } from '../lib/auth'
 
@@ -8,9 +8,19 @@ class Dashboard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: getUser()
+      user: {}
     }
-  }  
+  }
+  
+  componentWillMount() {
+    if (this.props.location.search.includes('code')) {
+      // update store
+      this.props.smartcarAuthSuccess(this.props.location.search)
+    }
+
+    this.setState({user: getUser()})
+  }
+  
   render () {
     let { user } = this.state
     return (
@@ -27,6 +37,7 @@ class Dashboard extends Component {
             <Button className="pt-minimal" icon="log-out" text="Logout" onClick={this.props.logoutRequest} />
         </NavbarGroup>
       </Navbar>
+      <Button onClick={this.props.smartcarAuthRequest} />
       </div>
     )
   }
@@ -35,6 +46,7 @@ class Dashboard extends Component {
 // Grab only the piece of state we need
 const mapStateToProps = state => ({  
   login: state.login,
+  dashboard: state.dashbaord
 })
 
-export default connect(mapStateToProps, { logoutRequest })(Dashboard)
+export default connect(mapStateToProps, { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess })(Dashboard)

@@ -36,7 +36,7 @@ const loginApi = (username, password) => {
         .then(response => response.json())
         .then(handleApiErrors)
         .then(json => json)
-        .catch((error) => { throw error })
+        .catch(error => { throw error })
 }
     
 
@@ -67,7 +67,7 @@ const loginFlow = function* (username, password) {
         // set a stringified version of our token to localstorage on our domain
         localStorage.setItem('token', JSON.stringify(token))
 
-        // redirect them to WIDGETS!
+        // redirect them to dashboard
         yield put(push('/dashboard'))
     } catch (error) {
         // error? send it to redux
