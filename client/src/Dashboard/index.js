@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Navbar, NavbarGroup, NavbarDivider, NavbarHeading, Button, Alignment } from '@blueprintjs/core'
-import { logoutRequest } from '../Login/actions'
+import { logoutRequest } from './actions'
+import { connect } from 'react-redux'
 
 class Dashboard extends Component {  
   render () {
@@ -14,7 +15,7 @@ class Dashboard extends Component {
             <Button className="pt-minimal" icon="document" text="Files" />
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
-            <Button className="pt-minimal" icon="log-out" text="Logout" />
+            <Button className="pt-minimal" icon="log-out" text="Logout" onClick={this.props.logoutRequest} />
         </NavbarGroup>
       </Navbar>
       </div>

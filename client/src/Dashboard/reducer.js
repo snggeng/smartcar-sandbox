@@ -45,7 +45,7 @@ export const logoutReducer = (state = logoutInitialState, action) => {
     }
 }
 
-const dashboardReducer = (state = initialState, action) => {
+const dashboardReducer = (state = dashboardInitialState, action) => {
 
 }
 
