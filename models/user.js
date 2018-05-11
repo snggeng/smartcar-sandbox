@@ -17,13 +17,7 @@ const UserSchema = new Schema({
   role: {
     type: String,
     default: 'user',
-    enum: ['admin', 'user'],
-    required: true
-  },
-  netId: {
-    type: Boolean,
-    default: false,
-    required: true
+    enum: ['admin', 'user']
   },
   cars: {
     type: [String],
