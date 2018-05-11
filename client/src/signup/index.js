@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { reduxForm, Field, clearSubmitErrors, reset } from 'redux-form'  
 import { connect } from 'react-redux'  
 import { Link } from 'react-router-dom'
-import { Button, Card, Elevation, Classes, Colors, Callout, FormGroup } from "@blueprintjs/core"
+import { Icon, Button, Card, Elevation, Classes, Colors, Callout, FormGroup } from "@blueprintjs/core"
 
 // Import components and actions
 import { showToast } from '../notifications/Messages'  
@@ -15,6 +15,40 @@ import './index.css'
 import logo from '../smartcar.jpg'
 
 const submitBtn = {marginBottom: '10px', width: '50%'}
+
+// Redux Form Validation Rules
+const required = value => (value ? undefined : 'Required')
+const maxLength = max => value =>
+  value && value.length > max ? `Must be ${max} characters or less` : undefined
+const maxLength15 = maxLength(15)
+const minLength = min => value =>
+  value && value.length < min ? `Must be ${min} characters or more` : undefined
+const minLength2 = minLength(2)
+const email = value =>
+  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
+    ? 'Invalid email address'
+    : undefined
+
+    // Custom Form Input Field    
+const renderField = ({
+  input,
+  label,
+  type,
+  meta: { touched, error, warning }
+}) => (
+  <div>
+    <FormGroup className={error && touched ? Classes.INTENT_DANGER : null}>
+      <input {...input} 
+        placeholder={label} 
+        type={type} 
+        className={`${Classes.INPUT} ${Classes.FILL} ${Classes.LARGE}`}
+         />
+      {touched &&
+        ((error && <div className={Classes.FORM_HELPER_TEXT}><Icon icon='error' iconSize={15} /> {error}</div>) ||
+          (warning && <div className={Classes.FORM_HELPER_TEXT}><Icon icon='warning-sign' iconSize={15} /> {warning}</div>))}
+    </FormGroup>
+  </div>
+)
 
 class Signup extends Component {  
   // Pass the correct proptypes in for validation
@@ -67,21 +101,41 @@ class Signup extends Component {
             <img src={logo} className='smartcar-logo' />
             <FormGroup>
             <Field
-              className={`${Classes.INPUT} ${Classes.FILL} ${Classes.LARGE}`} 
-              placeholder="Username"
+              label="Username"
               name="username"
               type="text"
               id="username"
-              component="input"
+              component={renderField}
+              validate={[required, maxLength15, minLength2]}
+            />
+            <Field
+              className={`${Classes.INPUT} ${Classes.FILL} ${Classes.LARGE}`} 
+              label="Password"
+              name="password"
+              type="password"
+              id="password"
+              component={renderField}
+              validate={[required, minLength2]}
               style={{margin: '10px'}}
             />
             <Field
               className={`${Classes.INPUT} ${Classes.FILL} ${Classes.LARGE}`} 
-              placeholder="Password"
-              name="password"
-              type="password"
-              id="password"
-              component="input"
+              label="First Name"
+              name="first_name"
+              type="text"
+              id="first_name"
+              component={renderField}
+              validate={[required, minLength2]}
+              style={{margin: '10px'}}
+            />
+            <Field
+              className={`${Classes.INPUT} ${Classes.FILL} ${Classes.LARGE}`} 
+              label="Last Name"
+              name="last_name"
+              type="text"
+              id="last_name"
+              component={renderField}
+              validate={[required, minLength2]}
               style={{margin: '10px'}}
             />
             </FormGroup>

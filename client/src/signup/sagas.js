@@ -9,13 +9,13 @@ import {
 const signupUrl = `${process.env.REACT_APP_API_URL}/public/users`
 
 // asynchronous
-const signupApi = (username, password) => 
+const signupApi = (username, password, first_name, last_name) => 
     fetch(signupUrl, {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, first_name, last_name }),
     })
         .then(response => response.json())
         .then(handleApiErrors)
@@ -26,7 +26,7 @@ const signupApi = (username, password) =>
 // SIGNUP_REQUESTING action detected by watcher
 const signupFlow = function* (action) {
     try {
-        const { username, password } = action
+        const { username, password, first_name, last_name } = action
     
         // synchronous
         const response = yield call(signupApi, username, password)
