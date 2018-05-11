@@ -1,4 +1,3 @@
-import React from 'react'
 import { Intent, Position, Toaster } from "@blueprintjs/core";
 
 const MyToaster = Toaster.create({})

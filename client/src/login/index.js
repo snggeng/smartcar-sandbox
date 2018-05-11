@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { reduxForm, Field, clearSubmitErrors } from 'redux-form'  
 import { connect } from 'react-redux'  
 import { Link } from 'react-router-dom'
-import { Button, Card, Elevation, Classes, Colors, Callout, FormGroup } from "@blueprintjs/core"
+import { Button, Card, Elevation, Classes, Callout, FormGroup } from "@blueprintjs/core"
 
 // Import components and actions
 import { showToast } from '../Notifications'  
@@ -34,19 +34,15 @@ class Login extends Component {
   componentWillReceiveProps(nextProps) {
     // show successful login
     if (nextProps.login.successful) {
-      nextProps.login.messages.map(e => { 
-        showToast('success', e) 
-      })
+      nextProps.login.messages.map(e => showToast('success', e))
     }
     // reset form errors
-    if (!this.props.login.requesting && this.props.login.errors == nextProps.login.errors && !!this.props.login.errors.length) {
+    if (!this.props.login.requesting && this.props.login.errors === nextProps.login.errors && !!this.props.login.errors.length) {
       this.props.login.errors = []
     }
     // show errors
     if (!!nextProps.login.errors.length) {
-      nextProps.login.errors.map(e => { 
-        showToast('error', e) 
-      })
+      nextProps.login.errors.map(e => showToast('error', e))
     }
   }
 
@@ -62,8 +58,6 @@ class Login extends Component {
       login: {
         requesting,
         successful,
-        messages,
-        errors,
       },
     } = this.props
 
@@ -71,7 +65,7 @@ class Login extends Component {
       <div className='login-container'>
         <Card elevation={Elevation.FOUR} className='login-card'>
           <form onSubmit={handleSubmit(this.submit)}>
-            <img src={logo} className='smartcar-logo' />
+            <img src={logo} alt='smartcar logo' className='smartcar-logo' />
             <FormGroup>
             <Field
               className={`${Classes.INPUT} ${Classes.FILL} ${Classes.LARGE}`} 

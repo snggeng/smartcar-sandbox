@@ -29,7 +29,7 @@ const signupFlow = function* (action) {
         const { username, password, first_name, last_name } = action
     
         // synchronous
-        const response = yield call(signupApi, username, password)
+        const response = yield call(signupApi, username, password, first_name, last_name)
     
         // will throw error if signupApi failed. if not, dispatch action
         yield put({ type: SIGNUP_SUCCESS, response })

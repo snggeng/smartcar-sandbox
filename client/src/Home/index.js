@@ -12,7 +12,7 @@ const Home = props => (
     <div className='home-container'>
         <Card elevation={Elevation.FOUR} className='home-card'>
             <h1>Smartcar Sandbox</h1>
-            <img src={logo} className='smartcar-logo' />
+            <img src={logo} alt='smartcar logo' className='smartcar-logo' />
             <p className='home-subtitle'>Welcome to the Smartcar Sandbox.</p>
             <p className='home-content'>You can use this application to demo the Smartcar API. 
                The source code for this application can be found <a href='https://github.com/snggeng/smartcar-sandbox' style={green}>here</a>.
