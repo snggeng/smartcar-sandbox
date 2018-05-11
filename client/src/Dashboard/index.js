@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
-import { Navbar, NavbarGroup, NavbarDivider, NavbarHeading, Button, Alignment } from '@blueprintjs/core'
+import { Navbar, NavbarGroup, NavbarDivider, NavbarHeading, Button, Alignment, Card, Elevation } from '@blueprintjs/core'
 import { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess } from './actions'
 import { connect } from 'react-redux'
 import { getUser } from '../lib/auth'
+
+// Import css
+import './index.css'
+import logo from '../smartcar.jpg' 
 
 class Dashboard extends Component {
   constructor(props) {
@@ -25,19 +29,24 @@ class Dashboard extends Component {
     let { user } = this.state
     return (
       <div>
-      <Navbar>
-        <NavbarGroup align={Alignment.LEFT}>
-            <NavbarHeading>Smartcar Sandbox</NavbarHeading>
-            <NavbarDivider />
-            <Button className="pt-minimal" icon="home" text="Home" />
-            <Button className="pt-minimal" icon="document" text="API" />
-            <Button className="pt-minimal" icon="user" text={user.first_name} />
-        </NavbarGroup>
-        <NavbarGroup align={Alignment.RIGHT}>
-            <Button className="pt-minimal" icon="log-out" text="Logout" onClick={this.props.logoutRequest} />
-        </NavbarGroup>
-      </Navbar>
-      <Button onClick={this.props.smartcarAuthRequest} />
+        <Navbar>
+          <NavbarGroup align={Alignment.LEFT}>
+              <img src={logo} alt='smartcar-logo' className='dashboard-smartcar-logo'/>
+              <NavbarHeading> Smartcar Sandbox</NavbarHeading>
+              <NavbarDivider />
+              <Button className="pt-minimal" icon="home" text="Home" />
+              <Button className="pt-minimal" icon="document" text="API" />
+              <Button className="pt-minimal" icon="user" text={user.first_name} />
+          </NavbarGroup>
+          <NavbarGroup align={Alignment.RIGHT}>
+              <Button className="pt-minimal" icon="log-out" text="Logout" onClick={this.props.logoutRequest} />
+          </NavbarGroup>
+        </Navbar>
+        <div className='dashboard-container'>
+          <Card elevation={Elevation.FOUR} className='dashboard-card'>
+            <Button text="Connect to your car" onClick={this.props.smartcarAuthRequest} />
+          </Card>
+        </div>
       </div>
     )
   }

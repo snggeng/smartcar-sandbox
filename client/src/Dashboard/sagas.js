@@ -85,7 +85,6 @@ const dashboardWatcher = function* (search) {
             task = yield fork(authFlow)
         }
 
-
         if (action.type === SMARTCAR_AUTH_ERROR) yield cancel(task)
         if (action.type === SMARTCAR_AUTH_SUCCESS) {
             console.log('auth success', action.search)
@@ -99,17 +98,4 @@ const dashboardWatcher = function* (search) {
     }
 }
 
-// const smartcarAuthWatcher = function* () {
-//     while(true) {
-//         const action = yield take(SMARTCAR_AUTH_SUCCESS)
-//         if (action.type === SMARTCAR_AUTH_SUCCESS) {
-//             let callback = yield call(api, callbackUrl)
-//             access = callback.access
-//             // set a stringified version of our token to localstorage on our domain
-//             localStorage.setItem('access_token', JSON.stringify(access))
-//             console.log(`callback ${callback}, access ${access}`)
-//         }
-//     }
-// }
-
-  export default dashboardWatcher
+export default dashboardWatcher
