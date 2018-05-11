@@ -1,4 +1,4 @@
-import { setUser } from '../user/actions'
+import { setUser } from '../User/actions'
 
 export function checkAuthorization (dispatch) {  
     // attempt to grab the token from localstorage

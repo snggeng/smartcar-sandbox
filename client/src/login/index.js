@@ -6,8 +6,7 @@ import { Link } from 'react-router-dom'
 import { Button, Card, Elevation, Classes, Colors, Callout, FormGroup } from "@blueprintjs/core"
 
 // Import components and actions
-import { showToast } from '../notifications/Messages'  
-import Errors from '../notifications/Errors'
+import { showToast } from '../Notifications'  
 import loginRequest from './actions'
 
 // Import css

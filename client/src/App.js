@@ -6,9 +6,9 @@ import { connect } from 'react-redux'
 
 // Import all of our components
 import Home from './Home'  
-import Login from './login'  
-import Signup from './signup'  
-import Widgets from './widgets'  
+import Login from './Login'  
+import Signup from './Signup'  
+import Dashboard from './Dashboard'  
 import NoMatch from './NoMatch'
 
 // Import css
@@ -45,13 +45,13 @@ class App extends Component {
         <Switch>
           <Route exact path="/" render={() => (
               this.props.loggedIn() ? (
-                  <Redirect to="/widgets"/>
+                  <Redirect to="/dashboard"/>
               ) : (
                   <Home/>
               ) )}/>
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
-          <PrivateRoute path="/widgets" component={Widgets} loggedIn={this.props.loggedIn} />
+          <PrivateRoute path="/dashboard" component={Dashboard} loggedIn={this.props.loggedIn} />
           <Route component={NoMatch} />
         </Switch>
       </Router>

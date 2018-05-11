@@ -17,11 +17,11 @@ import {
 import {  
   setUser,
   unsetUser,
-} from '../user/actions'
+} from '../User/actions'
 
 import {  
   USER_UNSET,
-} from '../user/constants'
+} from '../User/constants'
 
 const loginUrl = `${process.env.REACT_APP_API_URL}/public/signin`
 
