@@ -1,4 +1,8 @@
-const smartcar = require('smartcar');
+const smartcar = require('smartcar')
+const { mapAsync } = require('../utils')
+
+// Add mapAsync to Array prototype
+Array.prototype.mapAsync = mapAsync
 
 const client = new smartcar.AuthClient({
     clientId: process.env.CLIENT_ID,
@@ -12,7 +16,7 @@ const client = new smartcar.AuthClient({
   //get
 const authFlow = (req, res) => {
     const link = client.getAuthUrl({state: req.user._id});
-    console.log('link', link)
+    // console.log('link', link)
     // send redirect link back
     res.json(link);
 };
@@ -31,17 +35,40 @@ const callback = (req, res, next) => {
             return smartcar.getVehicleIds(access.accessToken);
         })
         .then((res) => {
-            // instantiate first vehicle in vehicle list
-            const vehicle = new smartcar.Vehicle(res.vehicles[0], access.accessToken);
+            // instantiate vehicles in vehicle list
+            let vehicles = res.vehicles.mapAsync((v, i) => new smartcar.Vehicle(res.vehicles[i], access.accessToken).info())
             // get identifying information about a vehicle
-            return vehicle.info();
+            return vehicles
         })
         .then((data) => {
-            console.log(data);
-            data.access = access
+            // send access token back to user
+            let response = {}
+            response.vehicles = data
+            response.access = access
             // json response will be sent to the user
-            res.json(data)
+            res.json(response)
         })
 }
 
-module.exports = { authFlow, callback }
+const getAccess = (req, res, next) => {
+    let access
+    // the user denied your requested permissions
+    if (req.query.error) return next(new Error(req.query.error))
+    // exchange auth code for access token
+    return client.exchangeCode(req.query.code)
+        .then(_access => res.json(_access))
+}
+
+// Get list of vehicles authorized by the user
+const getVehicleIds = (req, res, next) => {
+    return smartcar.getVehicleIds('cf7ba7e9-8c5d-417d-a99f-c386cfc235cc', {offset: 0, limit: 20})
+        .then(function(response) {
+        res.json(response);
+    });
+} 
+
+// const lockVehicle = (req, res, next) => {
+
+// }
+
+module.exports = { authFlow, callback, getAccess, getVehicleIds, }

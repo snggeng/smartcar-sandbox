@@ -21,5 +21,7 @@ router.get('/users/page/:page/limit/:limit/q', permit('admin', 'user'), userCont
 // SMARTCAR ROUTES
 router.get('/smartcar/auth', permit('admin', 'user'), smartcarController.authFlow)
 router.get('/smartcar/callback', permit('admin', 'user'), smartcarController.callback)
+router.get('/smartcar/access', permit('admin', 'user'), smartcarController.getAccess)
+router.get('/smartcar/vehicles', permit('admin', 'user'), smartcarController.getVehicleIds)
 
 module.exports = router
