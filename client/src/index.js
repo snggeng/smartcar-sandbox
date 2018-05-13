@@ -41,6 +41,7 @@ const store = createStore(
 sagaMiddleware.run(IndexSagas, store.dispatch)
 
 const loggedIn = () => checkAuthorization(store.dispatch)
+// const checkSmartcarAccess = () => checkAccess(store.dispatch)
 
 // Setup the top level router component for our React Router
 ReactDOM.render(  

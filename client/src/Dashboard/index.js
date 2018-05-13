@@ -3,6 +3,7 @@ import { Navbar, NavbarGroup, NavbarDivider, NavbarHeading, Button, Alignment, C
 import { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess } from './actions'
 import { connect } from 'react-redux'
 import { getUser } from '../lib/auth'
+import { updateUser } from '../User/actions'
 
 // Import css
 import './index.css'
@@ -18,9 +19,14 @@ class Dashboard extends Component {
   }
   
   componentWillMount() {
+    // dispatch action on redirect
     if (this.props.location.search.includes('code')) {
       // update store
       this.props.smartcarAuthSuccess(this.props.location.search)
+    }
+    // check if access_token exists
+    if (!!this.props.user.access_token) {
+      this.props.updateUser()
     }
 
     this.setState({user: getUser()})
@@ -64,4 +70,4 @@ const mapStateToProps = state => ({
   dashboard: state.dashboard
 })
 
-export default connect(mapStateToProps, { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess })(Dashboard)
+export default connect(mapStateToProps, { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess, updateUser })(Dashboard)

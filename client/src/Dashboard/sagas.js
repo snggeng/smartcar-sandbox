@@ -83,20 +83,23 @@ const dashboardWatcher = function* (search) {
         let access, task
         const action = yield take([SMARTCAR_AUTH_REQUESTING, SMARTCAR_AUTH_SUCCESS, SMARTCAR_AUTH_ERROR])
         
-        if (action.type === SMARTCAR_AUTH_REQUESTING) {
-            task = yield fork(authFlow)
-        }
+        if (action.type === SMARTCAR_AUTH_REQUESTING) task = yield fork(authFlow)
 
         if (action.type === SMARTCAR_AUTH_ERROR) yield cancel(task)
+
         if (action.type === SMARTCAR_AUTH_SUCCESS) {
-            console.log('auth success', action.search)
-            let callback = yield call(api, callbackUrl + action.search)
-            access = JSON.stringify(callback.access)
-            // set a stringified version of our token to localstorage on our domain
-            localStorage.setItem('access_token', access)
-            yield put(updateUser(access))
-            yield put(smartcarResponse(JSON.stringify(callback)))
-            // console.log(`callback ${JSON.stringify(callback)}, access ${access}`)
+            access = JSON.parse(localStorage.getItem('access_token'))
+            if (access.accessToken) {
+                yield put(updateUser(access))
+            } else {
+                console.log('else')
+                let callback = yield call(api, callbackUrl + action.search)
+                access = JSON.stringify(callback.access)
+                // set a stringified version of our token to localstorage on our domain
+                localStorage.setItem('access_token', access)
+                yield put(updateUser(access))
+                yield put(smartcarResponse(JSON.stringify(callback)))
+            }
         }
 
     }

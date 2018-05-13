@@ -51,7 +51,8 @@ class App extends Component {
               ) )}/>
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
-          <PrivateRoute path="/dashboard" component={Dashboard} loggedIn={this.props.loggedIn} />
+          <PrivateRoute path="/dashboard" component={Dashboard} 
+            loggedIn={this.props.loggedIn} />
           <Route component={NoMatch} />
         </Switch>
       </Router>
