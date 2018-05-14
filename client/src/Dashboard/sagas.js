@@ -1,4 +1,5 @@
 import { take, fork, cancel, call, put, cancelled } from 'redux-saga/effects'
+import { showToast } from '../Notifications'
 
 // We'll use this function to redirect to different routes based on cases
 import { push, replace } from 'react-router-redux'
@@ -13,6 +14,12 @@ import {
   SMARTCAR_AUTH_REQUESTING,
   SMARTCAR_AUTH_SUCCESS,
   SMARTCAR_AUTH_ERROR,
+  LOCK_REQUESTING, 
+  UNLOCK_REQUESTING,
+  LOCK_SUCCESS,
+  LOCK_ERROR,
+  UNLOCK_SUCCESS,
+  UNLOCK_ERROR,
 } from './constants'
 
 // Import actions
@@ -41,6 +48,25 @@ export const logoutWatcher = function* () {
       yield call(logout)
     }
 }
+
+export const lockWatcher = function* () {
+    while (true) {
+        const action = yield take([LOCK_REQUESTING, UNLOCK_REQUESTING])
+        console.log(action)
+        if (action.type === LOCK_REQUESTING) {
+            const task = yield fork(lockFlow, action.id)
+
+            const action = yield take([LOCK_ERROR])
+        }
+        if (action.type === UNLOCK_REQUESTING) {
+            const task = yield fork(unlockFlow, action.id)
+
+            const action = yield take([UNLOCK_ERROR])
+        }
+    }
+}
+
+
 const url =  `${process.env.REACT_APP_API_URL}/api/smartcar`
 const authUrl = `${url}/auth`
 const callbackUrl = `${url}/callback`
@@ -92,9 +118,8 @@ const authFlow = function* () {
         }
     }
 }
-  
 
-const dashboardWatcher = function* (search) {
+export const dashboardWatcher = function* (search) {
     while (true) {
         let access, task
         const action = yield take([SMARTCAR_AUTH_REQUESTING, SMARTCAR_AUTH_SUCCESS, SMARTCAR_AUTH_ERROR])
@@ -107,7 +132,7 @@ const dashboardWatcher = function* (search) {
             access = JSON.parse(localStorage.getItem('access_token'))
             if (access && access.accessToken) {
                 yield put(updateUser(access))
-                let vehicles = yield call(smartcarApi, url + `/vehicles/${access.accessToken}`)
+                let vehicles = yield call(smartcarApi, `${url}/vehicles/${access.accessToken}`)
                 console.log(vehicles)
                 yield put(smartcarResponse(vehicles))
                 // TODO: getVehicles and display
@@ -125,4 +150,42 @@ const dashboardWatcher = function* (search) {
     }
 }
 
-export default dashboardWatcher
+const lockFlow = function* (id) {
+    let access = JSON.parse(localStorage.getItem('access_token'))
+    try {
+        // synchronous
+        let response = yield call(api, `${url}/lock/${id}/${access.accessToken}`)
+
+        // async, non blocking
+        yield put({ type: LOCK_SUCCESS })
+    } catch (error) {
+        // error? send it to redux
+        yield put({ type: LOCK_ERROR, error })
+    } finally {
+        // No matter what, if our `forked` `task` was cancelled
+        // we will then just redirect them to login
+        if (yield cancelled()) {
+            showToast('error', 'Failed to lock car')
+        }
+    }
+}
+
+const unlockFlow = function* (id) {
+    let access = JSON.parse(localStorage.getItem('access_token'))
+    try {
+        // synchronous
+        let response = yield call(api, `${url}/unlock/${id}/${access.accessToken}`)
+
+        // async, non blocking
+        yield put({ type: UNLOCK_SUCCESS })
+    } catch (error) {
+        // error? send it to redux
+        yield put({ type: UNLOCK_ERROR, error })
+    } finally {
+        // No matter what, if our `forked` `task` was cancelled
+        // we will then just redirect them to login
+        if (yield cancelled()) {
+            showToast('error', 'Failed to unlock car')
+        }
+    }
+}

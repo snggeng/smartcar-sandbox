@@ -82,20 +82,28 @@ const getVehicles = (req, res, next) => {
                 // handle async calls to get vehicle data
                 let vehicle = await new smartcar.Vehicle(response.vehicles[i], req.params.token)
                 let info = await vehicle.info()
-                // let location = await vehicle.location()
-                // let odometer = await vehicle.odometer()
-                // let vin = await vehicle.vin()
-                // let vehicleInfo = { info, location, odometer, vin }
-                // return vehicleInfo
+                let location = await vehicle.location()
+                let odometer = await vehicle.odometer()
+                let vin = await vehicle.vin()
+                let vehicleInfo = { info, location, odometer, vin }
+                return vehicleInfo
                 // Insufficient permission for all of the above
-                return info
+                // return info
             })
             res.json(vehicles);
         });
 } 
 
-// const lockVehicle = (req, res, next) => {
+const lockVehicle = (req, res, next) => {
+    let vehicle = new smartcar.Vehicle(req.params.id, req.params.token)
+    vehicle.lock().then((response) => res.json(response))
+}
 
-// }
+const unlockVehicle = (req, res, next) => {
+    let vehicle = new smartcar.Vehicle(req.params.id, req.params.token)
+    vehicle.unlock().then((response) => res.json(response))
+}
 
-module.exports = { authFlow, callback, getAccess, getVehicleIds, getVehicles }
+
+
+module.exports = { authFlow, callback, getAccess, getVehicleIds, getVehicles, lockVehicle, unlockVehicle }

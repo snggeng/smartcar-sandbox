@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { TAG } from '@blueprintjs/icons/lib/esm/generated/iconContents';
 import { Navbar, NavbarGroup, NavbarDivider, NavbarHeading, Button, Alignment, Card, Elevation, Icon, Tag, Intent } from '@blueprintjs/core'
-import { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess } from './actions'
+import { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess, lockRequest, unlockRequest } from './actions'
 import { connect } from 'react-redux'
 import { getUser } from '../lib/auth'
 import { updateUser } from '../User/actions'
@@ -33,17 +33,13 @@ class Dashboard extends Component {
     this.setState({user: getUser()})
   }
 
-  getLocation = async (e) => {
+  handleLock = async (e) => {
     console.log(e.target.id)
-    let response = await fetch(`https://api.smartcar.com/v{version}/vehicles/${e.target.id}/location`, 
-    {
-      method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.props.user.smartcar.accessToken}`
-      }
-    })
-    console.log(response, response.json())
+    this.props.lockRequest(e.target.id.substring(0, e.target.id.length-4))
+  }
+
+  handleUnlock = async (e) => {
+    this.props.unlockRequest(e.target.id.substring(0, e.target.id.length-6))
   }
   
   render () {
@@ -69,18 +65,18 @@ class Dashboard extends Component {
           <Card elevation={Elevation.FOUR} className='dashboard-card'>
           <h5><Icon icon='user' size={30}/> {user.first_name} {user.last_name}</h5>
           <p>{this.props.user.smartcar ? 'Connected to Smartcar API with valid access token.' : 'Yet to connect to Smartcar API. No access token.'}</p>
-          {this.props.user.smartcar && this.props.dashboard.type === 'SMARTCAR_RESPONSE_SUCCESS' ? this.props.dashboard.messages[0].body.map(m => 
+          {this.props.dashboard.type === 'SMARTCAR_RESPONSE_SUCCESS' && this.props.dashboard.messages[0].body instanceof Array ? this.props.dashboard.messages[0].body.map(m => 
             (
-              <Card key={m.id} className='vehicle-card'>
-                <h3>{m.make}</h3>
-                <Tag intent={Intent.PRIMARY} interactive={true} minimal={true} className='vehicle-tag'>{m.year}</Tag>
-                <Tag intent={Intent.SUCCESS} interactive={true} minimal={true} className='vehicle-tag'>{m.model}</Tag>
-                {/* <Tag intent={Intent.PRIMARY} interactive={true} minimal={true} className='vehicle-tag'>VIN: {m.vin}</Tag> */}
+              <Card key={m.info.id} className='vehicle-card'>
+                <h3>{m.info.make}</h3>
+                <Tag intent={Intent.PRIMARY} interactive={true} minimal={true} className='vehicle-tag'>{m.info.year}</Tag>
+                <Tag intent={Intent.SUCCESS} interactive={true} minimal={true} className='vehicle-tag'>{m.info.model}</Tag>
+                <Tag intent={Intent.PRIMARY} interactive={true} minimal={true} className='vehicle-tag'>VIN: {m.vin}</Tag>
                 {/* <Tag intent={Intent.SUCCESS} interactive={true} minimal={true} className='vehicle-tag'>isLocked: {m.isLocked}</Tag> */}
-                {/* <Tag intent={Intent.PRIMARY} interactive={true} minimal={true} className='vehicle-tag'>Odometer: {m.distance}</Tag> */}
-                {/* <Tag intent={Intent.SUCCESS} interactive={true} minimal={true} className='vehicle-tag'>Location: lat {m.latitude}, long {m.longitude}</Tag> */}
-                <Button text='Get Location' id={m.id} onClick={this.getLocation}/>
-                <Button text='Start Ignition'/>
+                <Tag intent={Intent.SUCCESS} interactive={true} minimal={true} className='vehicle-tag'>Odometer: {m.odometer.data.distance}</Tag>
+                <Tag intent={Intent.PRIMARY} interactive={true} minimal={true} className='vehicle-tag'>Location: lat {m.location.data.latitude}, long {m.location.data.longitude}</Tag>
+                <Button text='Lock' id={m.info.id + 'lock'} onClick={this.handleLock}/>
+                <Button text='Unlock' id={m.info.id + 'unlock'} onClick={this.handleUnlock}/>
               </Card>
             )
           ) : null }
@@ -98,4 +94,4 @@ const mapStateToProps = state => ({
   dashboard: state.dashboard
 })
 
-export default connect(mapStateToProps, { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess, updateUser })(Dashboard)
+export default connect(mapStateToProps, { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess, updateUser, lockRequest, unlockRequest })(Dashboard)

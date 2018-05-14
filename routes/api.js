@@ -23,5 +23,7 @@ router.get('/smartcar/auth', permit('admin', 'user'), smartcarController.authFlo
 router.get('/smartcar/callback', permit('admin', 'user'), smartcarController.callback)
 router.get('/smartcar/access', permit('admin', 'user'), smartcarController.getAccess)
 router.get('/smartcar/vehicles/:token', permit('admin', 'user'), smartcarController.getVehicles)
+router.get('/smartcar/lock/:id/:token', permit('admin', 'user'), smartcarController.lockVehicle)
+router.get('/smartcar/unlock/:id/:token', permit('admin', 'user'), smartcarController.unlockVehicle)
 
 module.exports = router

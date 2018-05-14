@@ -1,6 +1,6 @@
 import SignupSaga from './Signup/sagas'
 import LoginSaga from './Login/sagas'
-import DashboardSaga, { logoutWatcher as LogoutSaga } from './Dashboard/sagas';
+import { dashboardWatcher as DashboardSaga, logoutWatcher as LogoutSaga, lockWatcher as lockSaga, } from './Dashboard/sagas';
 
 export default function* IndexSaga () {  
     yield [
@@ -8,5 +8,6 @@ export default function* IndexSaga () {
         LoginSaga(),
         LogoutSaga(),
         DashboardSaga(),
+        lockSaga(),
     ]
   }

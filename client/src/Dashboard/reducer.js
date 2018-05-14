@@ -6,6 +6,12 @@ import {
     SMARTCAR_AUTH_SUCCESS,
     SMARTCAR_AUTH_ERROR,
     SMARTCAR_RESPONSE_SUCCESS,
+    LOCK_REQUESTING, 
+    UNLOCK_REQUESTING,
+    LOCK_SUCCESS,
+    LOCK_ERROR,
+    UNLOCK_SUCCESS,
+    UNLOCK_ERROR,
 } from './constants'
 
 import { LOGIN_SUCCESS } from '../Login/constants'
@@ -87,6 +93,66 @@ export const dashboardReducer = (state = initialState, action) => {
         }
 
         case SMARTCAR_RESPONSE_SUCCESS:
+        return {
+            errors: [],
+            messages: [{ body: action.response, time: new Date() }],
+            requesting: false,
+            successful: true,
+            type: action.type
+        }
+
+        case LOCK_REQUESTING:
+        return {
+            errors: [],
+            messages: [{ body: action.response, time: new Date() }],
+            requesting: true,
+            successful: true,
+            type: action.type
+        }
+
+        case LOCK_ERROR:
+        return {
+            errors: state.errors.concat([{
+            body: action.error.toString(),
+            time: new Date(),
+            }]),
+            messages: [],
+            requesting: false,
+            successful: false,
+            type: action.type
+        }
+
+        case LOCK_SUCCESS:
+        return {
+            errors: [],
+            messages: [{ body: action.response, time: new Date() }],
+            requesting: false,
+            successful: true,
+            type: action.type
+        }
+
+        case UNLOCK_REQUESTING:
+        return {
+            errors: [],
+            messages: [{ body: action.response, time: new Date() }],
+            requesting: true,
+            successful: true,
+            type: action.type
+        }
+
+        case UNLOCK_ERROR:
+        return {
+            errors: state.errors.concat([{
+            body: action.error.toString(),
+            time: new Date(),
+            }]),
+            messages: [],
+            requesting: false,
+            successful: false,
+            type: action.type
+        }
+
+        case UNLOCK_SUCCESS:
         return {
             errors: [],
             messages: [{ body: action.response, time: new Date() }],
