@@ -61,14 +61,27 @@ const getAccess = (req, res, next) => {
 
 // Get list of vehicles authorized by the user
 const getVehicleIds = (req, res, next) => {
-    return smartcar.getVehicleIds('cf7ba7e9-8c5d-417d-a99f-c386cfc235cc', {offset: 0, limit: 20})
+    return smartcar.getVehicleIds(req.params.id, {offset: 0, limit: 20})
         .then(function(response) {
         res.json(response);
     });
+} 
+
+const getVehicles = (req, res, next) => {
+    // set options with default set to offset: 0, limit: 20
+    let options = {}
+    options.offset = req.query.offset || 0
+    options.limit = req.query.limit || 20
+    // get vehicle
+    return smartcar.getVehicleIds(req.params.token, options)
+        .then(async (response) => {
+            let vehicles = await response.vehicles.mapAsync(async (v, i) => await new smartcar.Vehicle(response.vehicles[i], req.params.token).info())
+            res.json(vehicles);
+        });
 } 
 
 // const lockVehicle = (req, res, next) => {
 
 // }
 
-module.exports = { authFlow, callback, getAccess, getVehicleIds, }
+module.exports = { authFlow, callback, getAccess, getVehicleIds, getVehicles }

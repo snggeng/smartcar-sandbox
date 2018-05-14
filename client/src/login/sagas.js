@@ -44,8 +44,9 @@ const logout = function* () {
     // dispatches the USER_UNSET action
     yield put(unsetUser())
 
-    // remove our token
+    // remove our tokens
     localStorage.removeItem('token')
+    localStorage.removeItem('access_token')
 
     // redirect to the /login screen
     yield put(push('/login'))

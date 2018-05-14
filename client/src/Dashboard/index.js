@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Navbar, NavbarGroup, NavbarDivider, NavbarHeading, Button, Alignment, Card, Elevation, Icon } from '@blueprintjs/core'
+import { TAG } from '@blueprintjs/icons/lib/esm/generated/iconContents';
+import { Navbar, NavbarGroup, NavbarDivider, NavbarHeading, Button, Alignment, Card, Elevation, Icon, Tag, Intent } from '@blueprintjs/core'
 import { logoutRequest, smartcarAuthRequest, smartcarAuthSuccess } from './actions'
 import { connect } from 'react-redux'
 import { getUser } from '../lib/auth'
@@ -55,7 +56,17 @@ class Dashboard extends Component {
           <Card elevation={Elevation.FOUR} className='dashboard-card'>
           <h5><Icon icon='user' size={30}/> {user.first_name} {user.last_name}</h5>
           <p>{this.props.user.smartcar ? 'Connected to Smartcar API with valid access token.' : 'Yet to connect to Smartcar API. No access token.'}</p>
-          {!!this.props.dashboard.messages.length ? (<p>{this.props.dashboard.messages[0].body.make}</p>) : null}
+          {this.props.user.smartcar && this.props.dashboard.type === 'SMARTCAR_RESPONSE_SUCCESS' ? this.props.dashboard.messages[0].body.map(m => 
+            (
+              <Card key={m.id} className='vehicle-card'>
+                <h3>{m.make}</h3>
+                <Tag intent={Intent.PRIMARY} interactive={true} minimal={true} className='vehicle-tag'>{m.year}</Tag>
+                <Tag intent={Intent.SUCCESS} interactive={true} minimal={true} className='vehicle-tag'>{m.model}</Tag>
+                <p></p>
+                <p></p>
+              </Card>
+            )
+          ) : null }
             <Button text="Connect to your car" onClick={this.props.smartcarAuthRequest} />
           </Card>
         </div>

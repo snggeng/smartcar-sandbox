@@ -25,8 +25,9 @@ import { smartcarResponse } from './actions'
 const logout = function* () {
     // dispatches the USER_UNSET action
     yield put(unsetUser())
-    // remove our token
+    // remove our tokens
     localStorage.removeItem('token')
+    localStorage.removeItem('access_token')
     // update store
     yield put({ type: LOGOUT_SUCCESS })
     // redirect to the home screen
@@ -40,9 +41,9 @@ export const logoutWatcher = function* () {
       yield call(logout)
     }
 }
-
-const authUrl = `${process.env.REACT_APP_API_URL}/api/smartcar/auth`
-const callbackUrl = `${process.env.REACT_APP_API_URL}/api/smartcar/callback`
+const url =  `${process.env.REACT_APP_API_URL}/api/smartcar`
+const authUrl = `${url}/auth`
+const callbackUrl = `${url}/callback`
 
 const api = (url) => {
     return fetch(url, {
@@ -50,6 +51,21 @@ const api = (url) => {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': JSON.parse(localStorage.getItem('token'))
+        }
+      })
+        .then(response => response.json())
+        .then(handleApiErrors)
+        .then(json => json)
+        .catch(error => { throw error })
+}
+
+const smartcarApi = (url) => {
+    return fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': JSON.parse(localStorage.getItem('token'))
+            // 'Authorization': JSON.parse(localStorage.getItem('access_token')).accessToken
         }
       })
         .then(response => response.json())
@@ -89,8 +105,12 @@ const dashboardWatcher = function* (search) {
 
         if (action.type === SMARTCAR_AUTH_SUCCESS) {
             access = JSON.parse(localStorage.getItem('access_token'))
-            if (access.accessToken) {
+            if (access && access.accessToken) {
                 yield put(updateUser(access))
+                let vehicles = yield call(smartcarApi, url + `/vehicles/${access.accessToken}`)
+                console.log(vehicles)
+                yield put(smartcarResponse(vehicles))
+                // TODO: getVehicles and display
             } else {
                 console.log('else')
                 let callback = yield call(api, callbackUrl + action.search)
@@ -98,7 +118,7 @@ const dashboardWatcher = function* (search) {
                 // set a stringified version of our token to localstorage on our domain
                 localStorage.setItem('access_token', access)
                 yield put(updateUser(access))
-                yield put(smartcarResponse(JSON.stringify(callback)))
+                yield put(smartcarResponse(callback))
             }
         }
 

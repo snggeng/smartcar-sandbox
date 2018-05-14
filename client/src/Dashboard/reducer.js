@@ -15,6 +15,7 @@ const initialState = {
     successful: false,
     messages: [],
     errors: [],
+    type: ''
 }
   
 export const logoutReducer = (state = initialState, action) => {  
@@ -25,6 +26,7 @@ export const logoutReducer = (state = initialState, action) => {
             successful: false,
             messages: [{ body: 'Logging out...', time: new Date() }],
             errors: [],
+            type: action.type
         }
         case LOGOUT_SUCCESS:
         return {
@@ -32,6 +34,7 @@ export const logoutReducer = (state = initialState, action) => {
             messages: [{ body: 'You are now logged out!', time: new Date() }],
             requesting: false,
             successful: true,
+            type: action.type
         }
         case LOGOUT_ERROR:
         return {
@@ -42,6 +45,7 @@ export const logoutReducer = (state = initialState, action) => {
             messages: [],
             requesting: false,
             successful: false,
+            type: action.type
         }
 
         case LOGIN_SUCCESS: 
@@ -60,6 +64,7 @@ export const dashboardReducer = (state = initialState, action) => {
             successful: false,
             messages: [{ body: 'Requesting for permission from Smartcar API', time: new Date() }],
             errors: [],
+            type: action.type
         }
         case SMARTCAR_AUTH_SUCCESS:
         return {
@@ -67,6 +72,7 @@ export const dashboardReducer = (state = initialState, action) => {
             messages: [{ body: 'Successfully connected to Smartcar API', time: new Date() }],
             requesting: false,
             successful: true,
+            type: action.type
         }
         case SMARTCAR_AUTH_ERROR:
         return {
@@ -77,6 +83,7 @@ export const dashboardReducer = (state = initialState, action) => {
             messages: [],
             requesting: false,
             successful: false,
+            type: action.type
         }
 
         case SMARTCAR_RESPONSE_SUCCESS:
@@ -85,6 +92,7 @@ export const dashboardReducer = (state = initialState, action) => {
             messages: [{ body: action.response, time: new Date() }],
             requesting: false,
             successful: true,
+            type: action.type
         }
 
         default:
