@@ -17,11 +17,12 @@
 .vehicle-card {
     display: flex;
     /* flex-wrap: wrap; */
+    /* justify-content: center; */
     flex: 1;
 }
 
 .vehicle-tag {
-    margin: 0 5px;
+    margin: 0 5px !important;
 }
 
 .dashboard-smartcar-logo {

@@ -4,14 +4,17 @@ const { mapAsync } = require('../utils')
 // Add mapAsync to Array prototype
 Array.prototype.mapAsync = mapAsync
 
+// Initialize authClient
+// TODO: allow user to configure scope
 const client = new smartcar.AuthClient({
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: 'http://localhost:3000/dashboard',
-    scope: ['read_vehicle_info'],
+    // scope: ['read_vehicle_info', 'read_vin', 'read_location', 'control_security', 
+    //         'control_security:unlock', 'read_odometer', 'control_security:lock'],
     development: true, // include "mock" Smartcar brand in make selector for testing
   });
-  
+
 // Redirect to Smartcar's authentication flow
   //get
 const authFlow = (req, res) => {
@@ -75,7 +78,18 @@ const getVehicles = (req, res, next) => {
     // get vehicle
     return smartcar.getVehicleIds(req.params.token, options)
         .then(async (response) => {
-            let vehicles = await response.vehicles.mapAsync(async (v, i) => await new smartcar.Vehicle(response.vehicles[i], req.params.token).info())
+            let vehicles = await response.vehicles.mapAsync(async (v, i) => {
+                // handle async calls to get vehicle data
+                let vehicle = await new smartcar.Vehicle(response.vehicles[i], req.params.token)
+                let info = await vehicle.info()
+                // let location = await vehicle.location()
+                // let odometer = await vehicle.odometer()
+                // let vin = await vehicle.vin()
+                // let vehicleInfo = { info, location, odometer, vin }
+                // return vehicleInfo
+                // Insufficient permission for all of the above
+                return info
+            })
             res.json(vehicles);
         });
 } 

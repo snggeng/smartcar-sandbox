@@ -32,6 +32,19 @@ class Dashboard extends Component {
 
     this.setState({user: getUser()})
   }
+
+  getLocation = async (e) => {
+    console.log(e.target.id)
+    let response = await fetch(`https://api.smartcar.com/v{version}/vehicles/${e.target.id}/location`, 
+    {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.props.user.smartcar.accessToken}`
+      }
+    })
+    console.log(response, response.json())
+  }
   
   render () {
     let { user } = this.state
@@ -46,7 +59,7 @@ class Dashboard extends Component {
               <a target="_blank" href="https://smartcar.com/docs">
                 <Button className="pt-minimal" icon="document" text="API" />
               </a>
-              <Button className="pt-minimal" icon="cog" text='settings' />
+              <Button className="pt-minimal" icon="cog" text='Settings' />
           </NavbarGroup>
           <NavbarGroup align={Alignment.RIGHT}>
               <Button className="pt-minimal" icon="log-out" text="Logout" onClick={this.props.logoutRequest} />
@@ -62,8 +75,12 @@ class Dashboard extends Component {
                 <h3>{m.make}</h3>
                 <Tag intent={Intent.PRIMARY} interactive={true} minimal={true} className='vehicle-tag'>{m.year}</Tag>
                 <Tag intent={Intent.SUCCESS} interactive={true} minimal={true} className='vehicle-tag'>{m.model}</Tag>
-                <p></p>
-                <p></p>
+                {/* <Tag intent={Intent.PRIMARY} interactive={true} minimal={true} className='vehicle-tag'>VIN: {m.vin}</Tag> */}
+                {/* <Tag intent={Intent.SUCCESS} interactive={true} minimal={true} className='vehicle-tag'>isLocked: {m.isLocked}</Tag> */}
+                {/* <Tag intent={Intent.PRIMARY} interactive={true} minimal={true} className='vehicle-tag'>Odometer: {m.distance}</Tag> */}
+                {/* <Tag intent={Intent.SUCCESS} interactive={true} minimal={true} className='vehicle-tag'>Location: lat {m.latitude}, long {m.longitude}</Tag> */}
+                <Button text='Get Location' id={m.id} onClick={this.getLocation}/>
+                <Button text='Start Ignition'/>
               </Card>
             )
           ) : null }
